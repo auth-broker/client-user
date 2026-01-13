@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import json
+from collections.abc import Generator
 from typing import Any, Dict, Optional, Union
 
 import httpx
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 from ..exceptions import HTTPException
 from ..models import *
@@ -23,7 +27,7 @@ class SyncClient(BaseModel):
     def get_user_by_id_user__user_id__get(
         self,
         user_id: str,
-    ) -> Any:
+    ) -> User:
         base_url = self.base_url
         path = f"/user/{user_id}"
 
@@ -51,13 +55,14 @@ class SyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
+
+        return User.model_validate(body) if body is not None else User()
 
     def get_user_by_oidc_user_oidc_get(
         self,
         oidc_sub: str,
         oidc_iss: str,
-    ) -> Any:
+    ) -> User:
         base_url = self.base_url
         path = f"/user/oidc"
 
@@ -88,12 +93,13 @@ class SyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
+
+        return User.model_validate(body) if body is not None else User()
 
     def upsert_user_by_oidc_user_oidc_put(
         self,
         data: UpsertByOIDCRequest,
-    ) -> Any:
+    ) -> User:
         base_url = self.base_url
         path = f"/user/oidc"
 
@@ -122,12 +128,13 @@ class SyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
+
+        return User.model_validate(body) if body is not None else User()
 
     def seen_user_user__user_id__seen_post(
         self,
         user_id: str,
-    ) -> Any:
+    ) -> User:
         base_url = self.base_url
         path = f"/user/{user_id}/seen"
 
@@ -155,4 +162,5 @@ class SyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
+
+        return User.model_validate(body) if body is not None else User()
